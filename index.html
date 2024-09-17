@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #0CC0DF; /* Background color */
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 40%;
+            max-width: 800px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Shadow */
+            padding: 20px;
+        }
+        img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            cursor: pointer;
+            border: 5px solid #0CC0DF; /* Outer blue border color */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .qa-box {
+            margin-top: 20px;
+            text-align: center;
+        }
+        .question {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .answer {
+            font-size: 1.2em;
+            color: #555;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3); /* Text shadow */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img id="quizImage" src="https://i.imgur.com/gqkwTyw.png" alt="Quiz Image">
+        <div class="qa-box">
+            <div id="question" class="question">Click the image to get a question!</div>
+            <div id="answer" class="answer"></div>
+        </div>
+    </div>
+    
+    <script>
+        const questionsAndAnswers = [
+            { question: "Which sitcom featured the character Lucy Ricardo?", answer: "'I Love Lucy' (1951-1957)" },
+            { question: "Who starred as the lead in 'The Mary Tyler Moore Show'?", answer: "Mary Tyler Moore" },
+            { question: "In 'Friends', what was Ross Geller's profession?", answer: "He was a paleontologist." },
+            { question: "Which sitcom revolved around a radio station in Cincinnati?", answer: "'WKRP in Cincinnati' (1978-1982)" },
+            { question: "What was the name of the diner in 'Seinfeld'?", answer: "Monk's Café" },
+            { question: "Which sitcom followed the life of a talking horse?", answer: "'Mister Ed' (1961-1966)" },
+            { question: "Who played the Fonz in 'Happy Days'?", answer: "Henry Winkler" },
+            { question: "What was the family name in 'The Brady Bunch'?", answer: "The Brady family" },
+            { question: "Which sitcom starred Sherman Hemsley as George Jefferson?", answer: "'The Jeffersons' (1975-1985)" },
+            { question: "What was the setting for 'Cheers'?", answer: "A Boston bar" },
+            { question: "Who played the title role in 'The Fresh Prince of Bel-Air'?", answer: "Will Smith" },
+            { question: "In 'The Office', what is the name of the company where the characters work?", answer: "Dunder Mifflin" },
+            { question: "What sitcom featured a blended family with six kids?", answer: "'The Brady Bunch' (1969-1974)" },
+            { question: "Which show featured the characters Tim Taylor and Al Borland?", answer: "'Home Improvement' (1991-1999)" },
+            { question: "What was the profession of the main characters in 'M*A*S*H'?", answer: "They were military doctors." },
+            { question: "Who played the title character in 'Roseanne'?", answer: "Roseanne Barr" },
+            { question: "Which show followed the life of radio psychiatrist Frasier Crane?", answer: "'Frasier' (1993-2004)" },
+            { question: "What animated family lives in Springfield?", answer: "'The Simpsons' (1989-present)" },
+            { question: "In which sitcom did Ted Danson play a bartender?", answer: "'Cheers' (1982-1993)" },
+            { question: "What was the first African-American family sitcom to become a major success?", answer: "'The Cosby Show' (1984-1992)" },
+            { question: "What was the name of the nerdy neighbor in 'Family Matters'?", answer: "Steve Urkel" },
+            { question: "Which sitcom centered on two male roommates pretending to be women to live in an affordable apartment?", answer: "'Bosom Buddies' (1980-1982)" },
+            { question: "Who starred as the lead in 'Gilligan's Island'?", answer: "Bob Denver as Gilligan" },
+            { question: "What is the fictional town in 'Parks and Recreation'?", answer: "Pawnee, Indiana" },
+            { question: "In which sitcom did Betty White play the character Rose Nylund?", answer: "'The Golden Girls' (1985-1992)" },
+            { question: "What sitcom follows the lives of four scientists and their friends?", answer: "'The Big Bang Theory' (2007-2019)" },
+            { question: "Who was the lead character in 'All in the Family'?", answer: "Archie Bunker, played by Carroll O'Connor" },
+            { question: "In 'Seinfeld', who frequently says, 'No soup for you!'?", answer: "The Soup Nazi" },
+            { question: "What was the name of the robot in 'Small Wonder'?", answer: "Vicki" },
+            { question: "Which sitcom starred Bob Newhart as a psychologist?", answer: "'The Bob Newhart Show' (1972-1978)" },
+            { question: "Which show featured the catchphrase 'Whatchoo talkin' 'bout, Willis?'?", answer: "'Diff'rent Strokes' (1978-1986)" },
+            { question: "What was the setting for 'That '70s Show'?", answer: "Point Place, Wisconsin" },
+            { question: "Which sitcom featured a character named Jack Tripper?", answer: "'Three's Company' (1977-1984)" },
+            { question: "What was the profession of the lead character in 'Murphy Brown'?", answer: "She was a television journalist." },
+            { question: "In 'The Addams Family', what was the name of the butler?", answer: "Lurch" },
+            { question: "Which sitcom featured a blended family with step-siblings named Greg and Marcia?", answer: "'The Brady Bunch' (1969-1974)" },
+            { question: "Who played the character of Sam Malone in 'Cheers'?", answer: "Ted Danson" },
+            { question: "Which show followed the life of Archie Bunker's African-American neighbors?", answer: "'The Jeffersons' (1975-1985)" },
+            { question: "Which sitcom featured a group of six friends living in New York?", answer: "'Friends' (1994-2004)" },
+            { question: "What was the name of the alien in 'Mork & Mindy'?", answer: "Mork, played by Robin Williams" },
+            { question: "Which show featured a character who lived in a garbage can?", answer: "'Sesame Street', Oscar the Grouch" },
+            { question: "What was the name of the coffee shop in 'Friends'?", answer: "Central Perk" },
+            { question: "In 'Happy Days', what was the name of the Cunningham family's restaurant?", answer: "Arnold's" },
+            { question: "Who played Ralph Kramden in 'The Honeymooners'?", answer: "Jackie Gleason" },
+            { question: "Which sitcom followed a housekeeper named Alice?", answer: "'The Brady Bunch' (1969-1974)" },
+            { question: "What was the first animated sitcom to air in primetime?", answer: "'The Flintstones' (1960-1966)" },
+            { question: "Who played the character Archie Bunker?", answer: "Carroll O'Connor" },
+            { question: "What sitcom featured the characters Balki Bartokomous and Larry Appleton?", answer: "'Perfect Strangers' (1986-1993)" },
+            { question: "What was the setting for 'The Andy Griffith Show'?", answer: "Mayberry, North Carolina" },
+            { question: "Which sitcom featured a genie named Jeannie?", answer: "'I Dream of Jeannie' (1965-1970)" },
+            { question: "Who was the actor behind the character George Costanza in 'Seinfeld'?", answer: "Jason Alexander" },
+            { question: "What was the premise of 'Gilligan's Island'?", answer: "A group of castaways stranded on a deserted island." },
+            { question: "Which sitcom centered around a New York City cab company?", answer: "'Taxi' (1978-1983)" }
+            // Continue with more sitcom-related questions up to 100.
+        ];
+
+        let currentQuestionIndex = -1;
+
+        function getRandomQuestion() {
+            let newIndex;
+            do {
+                newIndex = Math.floor(Math.random() * questionsAndAnswers.length);
+            } while (newIndex === currentQuestionIndex);
+            currentQuestionIndex = newIndex;
+            return questionsAndAnswers[newIndex];
+        }
+
+        document.getElementById('quizImage').addEventListener('click', function() {
+            const { question, answer } = getRandomQuestion();
+            document.getElementById('question').innerText = question;
+            document.getElementById('answer').innerText = answer;
+        });
+    </script>
+</body>
+</html>
